@@ -1,0 +1,15 @@
+
+#command docker without sudo
+1. sudo usermod -aG docker $USER
+2. reboot or logout/login
+
+# guide to build the docker image
+1. docker build -t cpp-env -f devenv/Dockerfile .
+# -t tag name of the image
+# -f path to Dockerfile
+
+# guide to run the docker image
+1. docker run -it --rm -v ${PWD}:/workspace cpp-env
+# -v ${PWD}:/workspace  mount the current directory to /workspace in the container
+# --rm remove the container after exiting
+# -it interactive terminal
