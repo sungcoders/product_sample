@@ -1,7 +1,0 @@
-/workspace/product/build/CMakeFiles/edit_cache.dir
-/workspace/product/build/CMakeFiles/rebuild_cache.dir
-/workspace/product/build/mycpp/CMakeFiles/my_app.dir
-/workspace/product/build/mycpp/CMakeFiles/edit_cache.dir
-/workspace/product/build/mycpp/CMakeFiles/rebuild_cache.dir
-/workspace/product/build/mysrc1/CMakeFiles/edit_cache.dir
-/workspace/product/build/mysrc1/CMakeFiles/rebuild_cache.dir

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Tên project
+# project name
 project(MyCppProject LANGUAGES CXX)
 
 # C++ standard

@@ -1,68 +1,32 @@
 #!/bin/bash
 
-# ============================
-# Script build project bằng CMake
-# ============================
+# import common functions
+SOURCE_DIR="$(dirname "$0")"
+source "$SOURCE_DIR/common/scripts/common.sh"
 
-# Tên thư mục build (có thể thay đổi)
+# config build
 BUILD_DIR="build"
+BUILD_TYPE="Release"
 
-# =============================
-# functions helper
-# =============================
-show_help() {
-    cat << EOF
-Usage: $0 [OPTIONS]
+# sysroot
+# SYSROOT_PATH="/path/to/sysroot"
+# CMAKE_SYSROOT_ARG="-DCMAKE_SYSROOT=$SYSROOT_PATH"
 
-OPTIONS:
-  -h        Help
-  -b        Build project
-  -c        Clean build directory
-  -m <arg>  Run tests with option <arg>
+# folder build
+rm -rf $BUILD_DIR
+mkdir -p $BUILD_DIR
+cd $BUILD_DIR
 
-Examples:
-  $0 -b     # build project
-  $0 -c     # clean build directory
-EOF
-}
+echo "[CMake] cross compile build project..."
+cmake .. \
+    -DCMAKE_TOOLCHAIN_FILE=../common/cmake/toolchain-arm.cmake \
+    -DCMAKE_BUILD_TYPE=BUILD_TYPE \
+    -DCMAKE_C_COMPILER=$CMAKE_C_COMPILER \
+    -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER \
+    -DCMAKE_CXX_STANDARD=17
 
-build_target() {
-    mkdir -p "$BUILD_DIR"
-    echo "⚙️  Configuring project..."
-    cmake -S . -B "$BUILD_DIR"
-    echo "🔨 Building project..."
-    cmake --build "$BUILD_DIR" -j$(nproc)
-    echo "✅ Build finished! Binaries are inside: $BUILD_DIR"
-}
-# =============================
-# Parse options
-# =============================
-while getopts "hbcm:" opt; do
-    FLAG_USED=true
-    case $opt in
-        h)
-            show_help
-            exit 0
-            ;;
-        b)
-            build_target
-            exit 0
-            ;;
-        c)
-            echo "🧹 Cleaning build directory..."
-            rm -rf "$BUILD_DIR"
-            exit 0
-            ;;
-        m)
-            echo " TBD: Run tests with option -m $OPTARG"
-            exit 0
-            ;;
-        *)
-            show_help
-            exit 0
-            ;;
-    esac
-done
+echo "[CMake] Building..."
+cmake --build . -j$(nproc)
 
-#default show help if no option
-show_help
+echo "✅ Build done!"
+
