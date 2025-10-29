@@ -1,0 +1,13 @@
+# Ignore product build outputs (when this file is copied to repo root for build)
+product/build
+product/build/**
+
+# Ignore local toolchains and large vendor dirs under devenv
+devenv/toolchains
+devenv/toolchains/**
+
+# Common ignores
+.git
+.vscode/
+*.swp
+.DS_Store

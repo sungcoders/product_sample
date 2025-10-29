@@ -50,7 +50,38 @@ run_container() {
 build_image() {
     IMAGE_NAME=$DEFAULT_IMAGE
     echo "👉 Build image với tên: $IMAGE_NAME"
-    docker build -t "$IMAGE_NAME" .
+    # Ensure Dockerfile path is resolved relative to this script's directory so the command
+    # works whether the script is executed from repo root or from inside devenv/
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    DOCKERFILE_PATH="$SCRIPT_DIR/Dockerfile"
+    BUILD_CONTEXT="$SCRIPT_DIR/.."
+    # If there is a .dockerignore in the devenv directory and you want to keep it there,
+    # we can temporarily copy it to the repo root so Docker uses those ignore rules while
+    # building with the repo root as context.
+    TMP_IGNORED=false
+    ROOT_DOCKERIGNORE="$BUILD_CONTEXT/.dockerignore"
+    LOCAL_DOCKERIGNORE="$SCRIPT_DIR/.dockerignore"
+    BACKUP_PATH=""
+    if [ -f "$LOCAL_DOCKERIGNORE" ]; then
+        TMP_IGNORED=true
+        if [ -f "$ROOT_DOCKERIGNORE" ]; then
+            BACKUP_PATH="$ROOT_DOCKERIGNORE.bak.$(date +%s)"
+            mv "$ROOT_DOCKERIGNORE" "$BACKUP_PATH"
+        fi
+        # Copy the devenv .dockerignore to root so it's used for this build
+        cp "$LOCAL_DOCKERIGNORE" "$ROOT_DOCKERIGNORE"
+    fi
+
+    # Run the build with the repo root as context
+    docker build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH" "$BUILD_CONTEXT"
+
+    # Restore original root .dockerignore (if any) and remove the temp copy
+    if [ "$TMP_IGNORED" = true ]; then
+        rm -f "$ROOT_DOCKERIGNORE"
+        if [ -n "$BACKUP_PATH" ] && [ -f "$BACKUP_PATH" ]; then
+            mv "$BACKUP_PATH" "$ROOT_DOCKERIGNORE"
+        fi
+    fi
 }
 
 #clean dangling images

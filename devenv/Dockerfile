@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 # Update package and install tool build
 RUN apt-get update && apt-get install -y \
-    build-essential \
+    make \
     cmake \
     && rm -rf /var/lib/apt/lists/*
 
