@@ -14,5 +14,3 @@ USER sunglv
 # workspace inside container
 WORKDIR /workspace
 
-# Copy source code to container docker
-COPY . .

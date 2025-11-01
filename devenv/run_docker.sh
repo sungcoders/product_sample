@@ -5,7 +5,7 @@
 # =============================
 DEFAULT_IMAGE="cpp-env"
 DEFAULT_CONTAINER="cpp-env-container"
-WORKSPACE_HOST="$(pwd)/.."
+WORKSPACE_HOST="$(cd "$(pwd)/.." && pwd)"
 WORKSPACE_CONT="/workspace"
 FLAG_USED=false
 
@@ -37,7 +37,7 @@ EOF
 run_container() {
     CONTAINER_NAME=$DEFAULT_CONTAINER
     IMAGE_NAME=$DEFAULT_IMAGE
-    echo "👉 Đang chạy container: $CONTAINER_NAME (image: $IMAGE_NAME)"
+    echo "👉 Đang chạy container: $CONTAINER_NAME (image: $IMAGE_NAME) build context: $WORKSPACE_HOST"
     docker run -it --rm \
         --name "$CONTAINER_NAME" \
         -v "$WORKSPACE_HOST":"$WORKSPACE_CONT" \
