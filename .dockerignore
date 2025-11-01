@@ -1,10 +1,6 @@
-# Ignore product build outputs (when this file is copied to repo root for build)
+# Ignore build folder
 product/build
-product/build/**
-
-# Ignore local toolchains and large vendor dirs under devenv
 devenv/toolchains
-devenv/toolchains/**
 
 # Common ignores
 .git
